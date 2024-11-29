@@ -20,6 +20,21 @@ def test_stationarity(timeseries):
 # Judul aplikasi
 st.title("Analisis dan Prediksi Data Time Series")
 
+# Deskripsi Aplikasi
+st.subheader("Deskripsi Aplikasi")
+st.write("""
+Aplikasi ini digunakan untuk menganalisis dan memprediksi data time series terkait **Jumlah Beras yang Masuk Per Bulan melalui Perum Bulog (Ton)**. 
+Data ini digunakan untuk memprediksi jumlah beras yang masuk pada bulan berikutnya dengan menggunakan model ARIMA.
+""")
+
+# Nama Pembuat dan Sumber Dataset
+st.subheader("Informasi Dataset")
+st.write("""
+- **Nama Pembuat**: Ersado Cahya Buana
+- **Sumber Dataset**: Dataset ini diambil dari data internal Perum Bulog, yang berfokus pada distribusi beras yang masuk per bulan di Indonesia. 
+  Anda dapat mengakses dataset ini di [Sumber Dataset](https://www.kaggle.com/code/sandi07/prediksi-beras-lokal-yang-masuk-perbulan/input).
+""")
+
 # Membaca file CSV
 file_path = "Beras yang Masuk Perbulan Melalui Perum Bulog (Ton).csv"
 try:
@@ -30,7 +45,7 @@ try:
     df = df.set_index('bulan')
 
     # Tampilkan data awal
-    st.subheader("Data Awal")
+    st.subheader("View Dataset")
     st.write(df.head())
 
     # Visualisasi awal
@@ -90,6 +105,7 @@ try:
 
     # Tampilkan hasil prediksi
     predictions_series = pd.Series(predictions, index=test.index)
+    st.subheader("Hasil Prediksi")
     st.line_chart({
         "Actual": test.values,
         "Predicted": predictions_series.values
@@ -99,5 +115,17 @@ try:
     rmse = np.sqrt(mean_squared_error(test, predictions))
     st.write(f"Root Mean Squared Error (RMSE): {rmse:.4f}")
 
+    # Overview Algoritma ARIMA
+    st.subheader("Overview Algoritma ARIMA")
+    st.write("""
+    ARIMA (AutoRegressive Integrated Moving Average) adalah salah satu algoritma yang digunakan untuk memodelkan time series. 
+    Algoritma ini terdiri dari tiga komponen utama:
+    - **AR (AutoRegressive)**: Model ini menggunakan hubungan antara observasi dengan lag-nya.
+    - **I (Integrated)**: Proses diferensiasi digunakan untuk membuat data menjadi stasioner.
+    - **MA (Moving Average)**: Model ini mengukur pengaruh kesalahan pada model sebelumnya.
+
+    Sebagai contoh, jika kita memprediksi jumlah beras yang masuk untuk bulan berikutnya, ARIMA memanfaatkan data historis untuk menghasilkan prediksi dengan memperhatikan pola musiman dan tren yang ada dalam data.
+    """)
+    
 except FileNotFoundError:
     st.error(f"File '{file_path}' tidak ditemukan. Pastikan file berada di direktori yang sama dengan skrip ini.")
